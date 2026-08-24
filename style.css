@@ -29,7 +29,9 @@ html, body{
   color: var(--text);
   font-family: var(--font-body);
   height: 100%;
+  height: 100dvh;
   overflow: hidden;
+  -webkit-text-size-adjust: 100%;
 }
 
 button{ font-family: inherit; cursor: pointer; }
@@ -39,7 +41,7 @@ button{ font-family: inherit; cursor: pointer; }
   outline-offset: 2px;
 }
 
-#app{ position: relative; width: 100vw; height: 100vh; }
+#app{ position: relative; width: 100vw; height: 100vh; height: 100dvh; }
 
 .screen{
   position: absolute; inset: 0;
@@ -362,20 +364,84 @@ button{ font-family: inherit; cursor: pointer; }
 /* ===================== RESPONSIVO ===================== */
 
 @media (max-width: 900px){
-  .hub-panel{
-    width: 100%;
-    top: auto;
-    height: 62%;
-    padding: 20px 20px 16px;
-    background: linear-gradient(to top, rgba(10,13,16,0.97), rgba(10,13,16,0.6));
+
+  .topbar{
+    padding: max(16px, env(safe-area-inset-top)) 20px 14px;
+    gap: 10px;
   }
-  .hero-vignette{
-    background: linear-gradient(to bottom, rgba(10,13,16,0.55) 0%, transparent 30%, rgba(10,13,16,0.4) 55%, rgba(10,13,16,0.97) 78%);
-  }
-  .topbar{ padding: 18px 20px; }
+  .brand-logo{ height: 20px; }
   .brand-sub{ display: none; }
+  .topbar-clock{ font-size: 11px; }
+
+  .hero-vignette{
+    background:
+      linear-gradient(to bottom, rgba(10,13,16,0.5) 0%, transparent 26%, rgba(10,13,16,0.35) 48%, rgba(10,13,16,0.98) 66%);
+  }
+
+  /* o painel de lista vira uma "folha" fixa na parte de baixo,
+     deixando a imagem principal visível acima */
+  .hub-panel{
+    top: auto;
+    left: 0; right: 0; bottom: 0;
+    width: 100%;
+    max-height: 64%;
+    padding: 18px 20px calc(18px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, rgba(10,13,16,0.98) 55%, rgba(10,13,16,0.85));
+    border-top: 1px solid var(--panel-line);
+    border-radius: 18px 18px 0 0;
+  }
+
+  .hub-panel::before{
+    content: "";
+    display: block;
+    width: 40px; height: 4px;
+    border-radius: 2px;
+    background: var(--panel-line);
+    margin: 0 auto 14px;
+  }
+
+  .hub-panel-header{ margin-bottom: 12px; }
+  .hub-title{ font-size: 20px; }
+  .hub-hint{ font-size: 12px; }
+
+  .hub-list{
+    gap: 8px;
+    /* deixa a lista rolável sem cortar o último item */
+    padding-bottom: 4px;
+  }
+
+  .hub-item{
+    padding: 14px 14px;
+    min-height: 48px; /* alvo de toque confortável */
+  }
+  .hub-item-name{ font-size: 14px; }
+  .hub-item-arrow{
+    /* sem hover no touch: mostra a seta sempre, sutil */
+    opacity: 0.55;
+    transform: none;
+  }
+
   .footer-note{ display: none; }
-  .info-box{ left: 16px; right: 16px; bottom: 16px; max-width: none; }
+
+  /* tela do ambiente */
+  .room-hud{ padding: max(14px, env(safe-area-inset-top)) 16px 14px; }
+  .back-btn{ font-size: 11px; padding: 8px 12px; }
+  .room-tag{ font-size: 10px; padding: 5px 8px; }
+
+  .info-box{
+    left: 12px; right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    max-width: none;
+    padding: 16px 40px 16px 16px;
+  }
+  .room-title{ font-size: 18px; }
+  .room-desc{ font-size: 13px; }
+}
+
+@media (max-width: 420px){
+  .hub-title{ font-size: 18px; }
+  .topbar-clock{ display: none; }
+  .hub-panel{ max-height: 68%; }
 }
 
 @media (prefers-reduced-motion: reduce){
