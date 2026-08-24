@@ -123,6 +123,10 @@ button{ font-family: inherit; cursor: pointer; }
 
 .hub-panel-header{ margin-bottom: 18px; }
 
+.hub-logo{
+  display: none; /* só aparece no mobile, ver media query abaixo */
+}
+
 .hub-eyebrow{
   display: block;
   font-family: var(--font-mono);
@@ -389,7 +393,7 @@ button{ font-family: inherit; cursor: pointer; }
     gap: 10px;
     border-bottom: 1px solid var(--panel-line);
   }
-  .brand-logo{ height: 22px; }
+  .brand-logo{ height: 26px; }
   .brand-sub{ display: none; }
   .topbar-clock{ font-size: 11px; }
 
@@ -405,10 +409,22 @@ button{ font-family: inherit; cursor: pointer; }
 
   .hub-panel::before{ display: none; }
 
-  .hub-panel-header{ margin-bottom: 18px; }
+  .hub-panel-header{ margin-bottom: 20px; }
+
+  .hub-logo{
+    display: block;
+    height: 38px;
+    width: auto;
+    margin-bottom: 16px;
+  }
+
   .hub-eyebrow{ font-size: 10.5px; }
   .hub-title{ font-size: 22px; }
-  .hub-hint{ font-size: 12.5px; }
+  .hub-hint{
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
 
   .hub-list{
     gap: 10px;
