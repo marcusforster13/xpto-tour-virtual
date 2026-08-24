@@ -84,17 +84,35 @@ const topbarClock    = document.getElementById("topbar-clock");
 videoEl.setAttribute("poster", HERO_IMAGE);
 camCountEl.textContent = ROOMS.length;
 
+const statCountEl = document.getElementById("stat-count");
+if (statCountEl) statCountEl.textContent = String(ROOMS.length).padStart(2, "0");
+
 // ---------- monta a lista do hub ----------
-ROOMS.forEach((room) => {
+// o primeiro ambiente vira um card em destaque (com imagem),
+// os demais entram como lista compacta abaixo.
+ROOMS.forEach((room, index) => {
   const li = document.createElement("li");
   const btn = document.createElement("button");
-  btn.className = "hub-item";
+  const isFeatured = index === 0;
+
+  btn.className = "hub-item" + (isFeatured ? " hub-item--featured" : "");
   btn.setAttribute("data-room", room.id);
-  btn.innerHTML = `
-    <span class="hub-item-id">${room.camLabel}</span>
-    <span class="hub-item-name">${room.title}</span>
-    <span class="hub-item-arrow">&rarr;</span>
-  `;
+
+  if (isFeatured) {
+    btn.style.backgroundImage = `linear-gradient(0deg, rgba(10,13,16,0.88), rgba(10,13,16,0.35)), url(${HERO_IMAGE})`;
+    btn.innerHTML = `
+      <span class="hub-item-id">${room.camLabel} — PRINCIPAL</span>
+      <span class="hub-item-name">${room.title}</span>
+      <span class="hub-item-desc">${room.description}</span>
+    `;
+  } else {
+    btn.innerHTML = `
+      <span class="hub-item-id">${room.camLabel}</span>
+      <span class="hub-item-name">${room.title}</span>
+      <span class="hub-item-arrow">&rarr;</span>
+    `;
+  }
+
   btn.addEventListener("click", () => enterRoom(room));
   li.appendChild(btn);
   hubList.appendChild(li);

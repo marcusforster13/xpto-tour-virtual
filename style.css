@@ -115,13 +115,13 @@ button{ font-family: inherit; cursor: pointer; }
   position: absolute;
   top: 0; right: 0; bottom: 0;
   z-index: 2;
-  width: min(400px, 42vw);
+  width: min(440px, 44vw);
   display: flex;
   flex-direction: column;
   padding: 100px 32px 24px;
 }
 
-.hub-panel-header{ margin-bottom: 18px; }
+.hub-panel-header{ margin-bottom: 22px; }
 
 .hub-logo{
   display: none; /* só aparece no mobile, ver media query abaixo */
@@ -131,34 +131,109 @@ button{ font-family: inherit; cursor: pointer; }
   display: block;
   font-family: var(--font-mono);
   font-size: 11px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   color: var(--cyan);
-  margin-bottom: 8px;
+  margin-bottom: 14px;
 }
 
 .hub-title{
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 26px;
-  margin: 0 0 8px;
-  line-height: 1.15;
+  font-size: 44px;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  margin: 0;
+  color: var(--text);
+}
+
+.hub-subtitle{
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin: 10px 0 0;
+}
+
+.hub-stats{
+  display: flex;
+  gap: 22px;
+  margin: 22px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--panel-line);
+}
+
+.hub-stat{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hub-stat-value{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  color: var(--cyan);
+}
+
+.hub-stat-label{
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  text-transform: uppercase;
 }
 
 .hub-hint{
   font-family: var(--font-body);
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--text-muted);
-  margin: 0;
+  margin: 18px 0 0;
 }
 
 .hub-list{
   list-style: none;
-  margin: 18px 0 0;
+  margin: 22px 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   overflow-y: auto;
+}
+
+/* card em destaque (primeiro ambiente da lista) */
+.hub-item--featured{
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  gap: 4px;
+  min-height: 148px;
+  padding: 18px;
+  background-size: cover;
+  background-position: center;
+  border-left: none;
+  border: 1px solid var(--panel-line);
+  margin-bottom: 6px;
+}
+.hub-item--featured:hover{
+  border-color: var(--cyan-dim);
+  transform: none;
+}
+.hub-item--featured .hub-item-id{
+  color: var(--cyan);
+  background: rgba(0,211,228,0.12);
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+.hub-item--featured .hub-item-name{
+  font-size: 20px;
+}
+.hub-item-desc{
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  max-width: 90%;
 }
 
 .hub-item{
@@ -171,7 +246,7 @@ button{ font-family: inherit; cursor: pointer; }
   border: 1px solid var(--panel-line);
   border-left: 3px solid transparent;
   border-radius: 4px;
-  padding: 13px 14px;
+  padding: 11px 14px;
   color: var(--text);
   backdrop-filter: blur(6px);
   transition: border-color .2s ease, background .2s ease, transform .2s ease;
@@ -197,7 +272,7 @@ button{ font-family: inherit; cursor: pointer; }
 .hub-item-name{
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 15px;
+  font-size: 14px;
   flex: 1;
 }
 
@@ -365,8 +440,6 @@ button{ font-family: inherit; cursor: pointer; }
   letter-spacing: 0.05em;
 }
 
-/* ===================== RESPONSIVO ===================== */
-
 /* ===================== RESPONSIVO (CELULAR) ===================== */
 /* Em telas estreitas, a imagem de fundo some e o painel de lista
    vira o próprio conteúdo da tela — um menu limpo, com identidade
@@ -423,9 +496,12 @@ button{ font-family: inherit; cursor: pointer; }
   }
 
   .hub-eyebrow{ font-size: 10.5px; }
-  .hub-title{ font-size: 22px; }
+  .hub-title{ font-size: 34px; }
+  .hub-subtitle{ font-size: 12px; }
+  .hub-stats{ gap: 18px; margin-top: 18px; padding-top: 14px; }
+  .hub-stat-value{ font-size: 17px; }
   .hub-hint{
-    font-size: 13px;
+    font-size: 12.5px;
     line-height: 1.5;
     color: var(--text-muted);
   }
@@ -434,6 +510,12 @@ button{ font-family: inherit; cursor: pointer; }
     gap: 10px;
     padding-bottom: 12px;
   }
+
+  .hub-item--featured{
+    min-height: 120px;
+    padding: 16px;
+  }
+  .hub-item--featured .hub-item-name{ font-size: 18px; }
 
   .hub-item{
     padding: 15px 16px;
@@ -480,7 +562,7 @@ button{ font-family: inherit; cursor: pointer; }
 }
 
 @media (max-width: 420px){
-  .hub-title{ font-size: 19px; }
+  .hub-title{ font-size: 28px; }
   .topbar-clock{ display: none; }
 }
 
