@@ -1,18 +1,15 @@
 # XPTO — Tour Virtual (demo)
 
-Site estático (HTML + CSS + JS puro, sem build) que simula um "painel de câmeras".
-A pessoa clica num feed/ambiente e um vídeo toca simulando a câmera entrando no
-espaço; ao terminar, o vídeo congela no último frame.
+Site estático (HTML + CSS + JS puro, sem build) em formato de **mapa
+inteligente**: a imagem principal fica no centro/fundo da tela (é o "frame
+zero" compartilhado por todos os ambientes), e ao lado tem uma lista de
+ambientes. Ao clicar num item da lista, toca o vídeo daquele ambiente
+(que visualmente começa a partir dessa mesma cena) e abre uma caixa com
+uma descrição curta do espaço.
 
-Como não há vídeos reais ainda, o "Sala de Controle" mostra a imagem que você
-enviou com um efeito de zoom no lugar do vídeo — é só pra você ver a experiência
-funcionando. Os outros quatro cards (Sala de Reunião 1 — Veritas, Sala de
-Reunião 2 — Tikvah, Equipamentos e Sala de Descanso) são placeholders, prontos
-pra você trocar pelas imagens/vídeos reais.
-
-A câmera **Equipamentos** é o ponto certo pra mostrar (em foto ou vídeo) o
-setup técnico da XPTO — servidores, racks, monitores, o que fizer sentido
-destacar pra quem tá fazendo o tour.
+Como ainda não há vídeos reais, ao clicar em qualquer item da lista o site
+mostra a própria imagem (assets/sala-controle.png) com um efeito de zoom no
+lugar do vídeo — é só pra você ver a experiência funcionando.
 
 ## Estrutura
 
@@ -55,18 +52,20 @@ virtual-tour-demo/
 
    ```js
    {
-     id: "computadores",
+     id: "reuniao-veritas",
      camLabel: "CAM 02",
-     title: "Sala de Computadores",
-     cover: "assets/sala-computadores.png",
-     video: "assets/videos/sala-computadores.mp4",
+     title: "Sala de Reunião 1 — Veritas",
+     description: "Espaço reservado para reuniões estratégicas...",
+     video: "assets/videos/sala-reuniao-veritas.mp4",
      startTime: 0, // em que segundo do vídeo começar
    }
    ```
 
+   `description` é o texto que aparece na caixinha de informações quando a
+   pessoa entra naquele ambiente — pode editar à vontade.
+
    `startTime` é útil se o seu vídeo tiver alguns segundos "mortos" no
-   início e você quiser que o clique já comece no frame certo — é
-   basicamente pular direto pro ponto que casa com a transição.
+   início e você quiser que o clique já comece no frame certo.
 
 5. Quer mais ambientes? Só adicionar mais objetos nesse array — o painel
    (grid de câmeras) se ajusta sozinho.

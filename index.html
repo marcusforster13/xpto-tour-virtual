@@ -13,8 +13,13 @@
 
 <div id="app">
 
-  <!-- ===================== TELA 1 — PAINEL / MENU ===================== -->
+  <!-- ===================== TELA 1 — MAPA / HUB ===================== -->
   <section id="menu-screen" class="screen active">
+
+    <div class="hero-media">
+      <img src="assets/sala-controle.png" alt="Visão geral do ambiente XPTO" class="hero-bg" id="hero-bg">
+      <div class="hero-vignette"></div>
+    </div>
 
     <header class="topbar">
       <img class="brand-logo" src="assets/logo.png" alt="XPTO Inc.">
@@ -22,16 +27,19 @@
       <div class="topbar-clock" id="topbar-clock">00:00:00</div>
     </header>
 
-    <p class="intro">
-      Selecione um feed abaixo para entrar no ambiente.
-    </p>
-
-    <div class="grid" id="grid">
-      <!-- os tiles são gerados via JS a partir de rooms[] em script.js -->
-    </div>
+    <aside class="hub-panel">
+      <div class="hub-panel-header">
+        <span class="hub-eyebrow">MAPA DO AMBIENTE</span>
+        <h2 class="hub-title">Selecione um ponto do tour</h2>
+        <p class="hub-hint">Clique num item da lista pra entrar no ambiente.</p>
+      </div>
+      <ul class="hub-list" id="hub-list">
+        <!-- itens gerados via JS a partir de ROOMS em script.js -->
+      </ul>
+    </aside>
 
     <footer class="footer-note">
-      SISTEMA XPTO — 5 CÂMERAS ONLINE — ACESSO VISITANTE
+      SISTEMA XPTO — <span id="cam-count">0</span> CÂMERAS ONLINE — ACESSO VISITANTE
     </footer>
   </section>
 
@@ -44,14 +52,17 @@
     <div class="scanline"></div>
 
     <div class="room-hud room-hud--top">
-      <button id="back-btn" class="back-btn" aria-label="Voltar ao painel">
-        <span class="back-arrow">&larr;</span> Voltar ao painel
+      <button id="back-btn" class="back-btn" aria-label="Voltar ao mapa">
+        <span class="back-arrow">&larr;</span> Voltar ao mapa
       </button>
       <div class="room-tag" id="room-tag">CAM 01 — AO VIVO</div>
     </div>
 
-    <div class="room-hud room-hud--bottom">
+    <div class="info-box" id="info-box">
+      <button class="info-close" id="info-close" aria-label="Fechar descrição">&times;</button>
+      <div class="info-eyebrow" id="room-tag-2">CAM 01</div>
       <div class="room-title" id="room-title">Sala de Controle</div>
+      <p class="room-desc" id="room-desc">Descrição do ambiente.</p>
       <div class="room-status" id="room-status">Conectando ao feed…</div>
     </div>
 

@@ -1,28 +1,32 @@
 /* =========================================================
    XPTO — Tour Virtual — lógica
    =========================================================
+   CONCEITO: a imagem principal (assets/sala-controle.png) é o
+   "frame zero" compartilhado por todos os ambientes — é o
+   ponto de partida visual do tour, e serve de poster/fallback
+   pra todos os vídeos, já que cada vídeo de entrada começa
+   visualmente a partir dessa mesma cena.
+
    COMO ADICIONAR UM AMBIENTE DE VERDADE:
    1. Coloque o vídeo de entrada em  assets/videos/NOME.mp4
-   2. Coloque uma imagem de capa em  assets/NOME.png
-   3. Adicione um objeto no array ROOMS abaixo.
+      (o vídeo deve começar visualmente parecido com a imagem
+      HERO_IMAGE definida abaixo, já que é o frame comum).
+   2. Adicione um objeto no array ROOMS abaixo, com título,
+      descrição e caminho do vídeo.
 
-   startTime  = em que segundo do vídeo a reprodução deve
-                começar (útil se o vídeo tiver um trecho
-                "morto" no início e você quiser pular direto
-                pro frame que casa com o clique).
-   loopFrame  = se true, ao terminar o vídeo ele congela no
-                último frame (dá a sensação de "chegou e parou
-                olhando o ambiente"). Se quiser um vídeo em
-                loop contínuo dentro do ambiente, troque
-                video.loop = true lá na função playRoom().
+   startTime = em que segundo do vídeo a reprodução deve
+               começar, caso o arquivo tenha um trecho "morto"
+               no início.
    ========================================================= */
+
+const HERO_IMAGE = "assets/sala-controle.png";
 
 const ROOMS = [
   {
     id: "controle",
     camLabel: "CAM 01",
     title: "Sala de Controle",
-    cover: "assets/sala-controle.png",
+    description: "Onde os operadores acompanham câmeras, alertas e sistemas em tempo real, 24 horas por dia.",
     video: "assets/videos/sala-controle.mp4",
     startTime: 0,
   },
@@ -30,7 +34,7 @@ const ROOMS = [
     id: "reuniao-veritas",
     camLabel: "CAM 02",
     title: "Sala de Reunião 1 — Veritas",
-    cover: "",
+    description: "Espaço reservado para reuniões estratégicas, alinhamentos e apresentações a clientes.",
     video: "assets/videos/sala-reuniao-veritas.mp4",
     startTime: 0,
   },
@@ -38,7 +42,7 @@ const ROOMS = [
     id: "reuniao-tikvah",
     camLabel: "CAM 03",
     title: "Sala de Reunião 2 — Tikvah",
-    cover: "",
+    description: "Ambiente para reuniões internas, treinamentos e alinhamentos de equipe.",
     video: "assets/videos/sala-reuniao-tikvah.mp4",
     startTime: 0,
   },
@@ -46,7 +50,7 @@ const ROOMS = [
     id: "equipamentos",
     camLabel: "CAM 04",
     title: "Equipamentos",
-    cover: "",
+    description: "A estrutura técnica por trás da operação: servidores, racks e sistemas de gravação.",
     video: "assets/videos/equipamentos.mp4",
     startTime: 0,
   },
@@ -54,39 +58,46 @@ const ROOMS = [
     id: "descanso",
     camLabel: "CAM 05",
     title: "Sala de Descanso",
-    cover: "",
+    description: "Espaço de convivência da equipe para pausas durante o turno.",
     video: "assets/videos/sala-descanso.mp4",
     startTime: 0,
   },
 ];
 
 // ---------- elementos ----------
-const grid          = document.getElementById("grid");
+const hubList        = document.getElementById("hub-list");
+const camCountEl     = document.getElementById("cam-count");
 const menuScreen     = document.getElementById("menu-screen");
-const roomScreen      = document.getElementById("room-screen");
-const videoEl         = document.getElementById("tour-video");
-const fallbackImg     = document.getElementById("tour-fallback");
+const roomScreen     = document.getElementById("room-screen");
+const videoEl        = document.getElementById("tour-video");
+const fallbackImg    = document.getElementById("tour-fallback");
+const infoBox        = document.getElementById("info-box");
+const infoClose      = document.getElementById("info-close");
 const roomTitleEl    = document.getElementById("room-title");
+const roomDescEl     = document.getElementById("room-desc");
 const roomTagEl      = document.getElementById("room-tag");
+const roomTag2El     = document.getElementById("room-tag-2");
 const roomStatusEl   = document.getElementById("room-status");
-const backBtn         = document.getElementById("back-btn");
+const backBtn        = document.getElementById("back-btn");
 const topbarClock    = document.getElementById("topbar-clock");
 
-// ---------- monta os tiles do painel ----------
+videoEl.setAttribute("poster", HERO_IMAGE);
+camCountEl.textContent = ROOMS.length;
+
+// ---------- monta a lista do hub ----------
 ROOMS.forEach((room) => {
-  const tile = document.createElement("button");
-  tile.className = "feed-tile" + (room.cover ? "" : " placeholder");
-  if (room.cover) tile.style.backgroundImage = `url(${room.cover})`;
-  tile.setAttribute("data-room", room.id);
-  tile.innerHTML = `
-    <div class="feed-hud">
-      <span class="feed-id">${room.camLabel}</span>
-      <span class="feed-rec"><i class="dot"></i>REC</span>
-    </div>
-    <div class="feed-label">${room.title}</div>
+  const li = document.createElement("li");
+  const btn = document.createElement("button");
+  btn.className = "hub-item";
+  btn.setAttribute("data-room", room.id);
+  btn.innerHTML = `
+    <span class="hub-item-id">${room.camLabel}</span>
+    <span class="hub-item-name">${room.title}</span>
+    <span class="hub-item-arrow">&rarr;</span>
   `;
-  tile.addEventListener("click", () => enterRoom(room));
-  grid.appendChild(tile);
+  btn.addEventListener("click", () => enterRoom(room));
+  li.appendChild(btn);
+  hubList.appendChild(li);
 });
 
 // ---------- relógio no topo (efeito HUD) ----------
@@ -100,8 +111,11 @@ setInterval(tickClock, 1000);
 // ---------- entrar num ambiente ----------
 function enterRoom(room) {
   roomTitleEl.textContent = room.title;
+  roomDescEl.textContent = room.description;
   roomTagEl.textContent = `${room.camLabel} — AO VIVO`;
+  roomTag2El.textContent = room.camLabel;
   roomStatusEl.textContent = "Conectando ao feed…";
+  infoBox.classList.remove("hidden");
 
   menuScreen.classList.remove("active");
   roomScreen.classList.add("active");
@@ -109,7 +123,12 @@ function enterRoom(room) {
   playRoom(room);
 }
 
-// ---------- voltar ao painel ----------
+// ---------- fechar caixa de descrição (sem sair do ambiente) ----------
+infoClose.addEventListener("click", () => {
+  infoBox.classList.add("hidden");
+});
+
+// ---------- voltar ao mapa ----------
 backBtn.addEventListener("click", () => {
   videoEl.pause();
   videoEl.removeAttribute("src");
@@ -133,13 +152,11 @@ function playRoom(room) {
 
   const useFallback = () => {
     videoEl.style.display = "none";
-    if (room.cover) {
-      fallbackImg.src = room.cover;
-      fallbackImg.style.display = "block";
-      // força reflow pra animação reiniciar sempre
-      void fallbackImg.offsetWidth;
-      fallbackImg.classList.add("zooming");
-    }
+    fallbackImg.src = HERO_IMAGE;
+    fallbackImg.style.display = "block";
+    // força reflow pra animação reiniciar sempre
+    void fallbackImg.offsetWidth;
+    fallbackImg.classList.add("zooming");
     roomStatusEl.textContent = "Pré-visualização — vídeo de entrada ainda não configurado";
   };
 
