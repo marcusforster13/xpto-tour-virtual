@@ -20,6 +20,7 @@
    ========================================================= */
 
 const HERO_IMAGE = "assets/sala-controle.png";
+const FEATURED_CARD_IMAGE = "assets/sala-controle-card.jpg"; // recorte sem a TV da parede, específico pro card do menu
 
 const ROOMS = [
   {
@@ -99,7 +100,8 @@ ROOMS.forEach((room, index) => {
   btn.setAttribute("data-room", room.id);
 
   if (isFeatured) {
-    btn.style.backgroundImage = `linear-gradient(0deg, rgba(10,13,16,0.88), rgba(10,13,16,0.35)), url(${HERO_IMAGE})`;
+    btn.style.backgroundImage = `linear-gradient(180deg, rgba(10,13,16,0.55) 0%, rgba(10,13,16,0.95) 60%), url(${FEATURED_CARD_IMAGE})`;
+    btn.style.backgroundPosition = "center";
     btn.innerHTML = `
       <span class="hub-item-id">${room.camLabel} — PRINCIPAL</span>
       <span class="hub-item-name">${room.title}</span>
