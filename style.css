@@ -1,0 +1,333 @@
+/* =========================================================
+   KOTO — Tour Virtual
+   Identidade: central de monitoramento / grade de câmeras.
+   Paleta: grafite quase-preto + ciano de tela CRT + âmbar de alerta (uso raro).
+   ========================================================= */
+
+:root{
+  --bg:            #0a0d10;
+  --panel:         #12161b;
+  --panel-line:    #232a31;
+  --text:          #e8edf1;
+  --text-muted:    #7f8b96;
+  --cyan:          #00d3e4;
+  --cyan-dim:      rgba(0, 211, 228, 0.35);
+  --navy:          #000050;
+  --amber:         #f2a93b;
+  --red:           #ef4b4b;
+
+  --font-display:  'Space Grotesk', sans-serif;
+  --font-body:     'Inter', sans-serif;
+  --font-mono:     'JetBrains Mono', monospace;
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  margin:0; padding:0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  height: 100%;
+  overflow: hidden;
+}
+
+button{ font-family: inherit; cursor: pointer; }
+
+:focus-visible{
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+
+#app{ position: relative; width: 100vw; height: 100vh; }
+
+.screen{
+  position: absolute; inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.02);
+  transition: opacity .5s ease, transform .6s ease, visibility 0s linear .5s;
+}
+.screen.active{
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  transition: opacity .5s ease, transform .6s ease;
+}
+
+/* ===================== TELA 1 — PAINEL ===================== */
+
+#menu-screen{
+  display: flex;
+  flex-direction: column;
+  padding: 28px 40px 20px;
+  background:
+    radial-gradient(circle at 15% 0%, rgba(73,224,209,0.06), transparent 40%),
+    var(--bg);
+}
+
+.topbar{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--panel-line);
+}
+
+.brand-logo{
+  height: 26px;
+  width: auto;
+  display: block;
+}
+
+.brand-sub{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+.topbar-clock{
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--cyan);
+  letter-spacing: 0.05em;
+}
+
+.intro{
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 16px 0 18px;
+  letter-spacing: 0.02em;
+}
+
+.grid{
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  gap: 14px;
+  min-height: 0;
+}
+
+.feed-tile{
+  position: relative;
+  border: 1px solid var(--panel-line);
+  background-color: var(--panel);
+  background-size: cover;
+  background-position: center;
+  border-radius: 4px;
+  overflow: hidden;
+  padding: 0;
+  text-align: left;
+  color: var(--text);
+  transition: border-color .25s ease, transform .25s ease;
+}
+
+.feed-tile::before{
+  /* vinheta pra dar aspecto de câmera */
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.35) 100%);
+  transition: background .25s ease;
+}
+
+.feed-tile:hover,
+.feed-tile:focus-visible{
+  border-color: var(--cyan-dim);
+  transform: translateY(-2px);
+}
+.feed-tile:hover::before{
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.05) 45%, rgba(73,224,209,0.12) 100%);
+}
+
+.feed-tile.placeholder{
+  background-image: none;
+  background:
+    repeating-linear-gradient(135deg, #14191f 0 2px, #10141a 2px 4px);
+}
+
+.feed-hud{
+  position: absolute;
+  top: 10px; left: 10px; right: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  z-index: 2;
+}
+
+.feed-id{
+  background: rgba(0,0,0,0.5);
+  padding: 2px 6px;
+  border-radius: 2px;
+  color: var(--text);
+}
+
+.feed-rec{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--red);
+  background: rgba(0,0,0,0.5);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+.feed-rec .dot{
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  display: inline-block;
+  animation: blink 1.4s infinite ease-in-out;
+}
+@keyframes blink{ 50% { opacity: 0.25; } }
+
+.feed-label{
+  position: absolute;
+  left: 12px; bottom: 10px; right: 12px;
+  z-index: 2;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.feed-sub{
+  position: absolute;
+  left: 12px; bottom: -14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.footer-note{
+  padding-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ===================== TELA 2 — DENTRO DO AMBIENTE ===================== */
+
+#room-screen{
+  background: #000;
+}
+
+.tour-media{
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.tour-fallback{
+  transform-origin: center center;
+  animation: none;
+}
+.tour-fallback.zooming{
+  animation: fallback-zoom 2.6s ease-out forwards;
+}
+@keyframes fallback-zoom{
+  from{ transform: scale(1); filter: brightness(0.7); }
+  to{   transform: scale(1.18); filter: brightness(1); }
+}
+
+.scanline{
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.025) 0px,
+    rgba(255,255,255,0.025) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: overlay;
+  opacity: 0.5;
+}
+
+.room-hud{
+  position: absolute;
+  left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  padding: 22px 30px;
+  z-index: 3;
+}
+.room-hud--top{
+  top: 0;
+  justify-content: space-between;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.65), transparent);
+}
+.room-hud--bottom{
+  bottom: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.back-btn{
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(10,13,16,0.55);
+  border: 1px solid var(--panel-line);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  padding: 9px 14px;
+  border-radius: 4px;
+  transition: border-color .2s ease, background .2s ease;
+}
+.back-btn:hover{
+  border-color: var(--cyan-dim);
+  background: rgba(10,13,16,0.85);
+}
+.back-arrow{ color: var(--cyan); }
+
+.room-tag{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  background: rgba(10,13,16,0.55);
+  border: 1px solid var(--panel-line);
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+.room-title{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 28px;
+}
+.room-status{
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ===================== RESPONSIVO ===================== */
+
+@media (max-width: 860px){
+  #menu-screen{ padding: 20px 16px 14px; }
+  .grid{ grid-template-columns: 1fr 1fr; }
+  .room-title{ font-size: 20px; }
+  .brand-sub{ display: none; }
+}
+
+@media (max-width: 560px){
+  .grid{ grid-template-columns: 1fr; }
+  .topbar-clock{ display: none; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .screen, .feed-tile, .tour-fallback.zooming{
+    transition: none !important;
+    animation: none !important;
+  }
+}
