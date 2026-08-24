@@ -363,67 +363,88 @@ button{ font-family: inherit; cursor: pointer; }
 
 /* ===================== RESPONSIVO ===================== */
 
+/* ===================== RESPONSIVO (CELULAR) ===================== */
+/* Em telas estreitas, a imagem de fundo some e o painel de lista
+   vira o próprio conteúdo da tela — um menu limpo, com identidade
+   visual própria (nada de imagem cortada atrás). A imagem/vídeo só
+   aparece quando a pessoa entra num ambiente. */
+
 @media (max-width: 900px){
 
-  .topbar{
-    padding: max(16px, env(safe-area-inset-top)) 20px 14px;
-    gap: 10px;
+  .hero-media,
+  .hero-vignette{
+    display: none;
   }
-  .brand-logo{ height: 20px; }
+
+  #menu-screen{
+    background:
+      radial-gradient(circle at 18% 0%, rgba(0,211,228,0.10), transparent 45%),
+      radial-gradient(circle at 100% 100%, rgba(0,211,228,0.06), transparent 50%),
+      var(--bg);
+  }
+
+  .topbar{
+    position: relative;
+    padding: max(20px, env(safe-area-inset-top)) 20px 16px;
+    gap: 10px;
+    border-bottom: 1px solid var(--panel-line);
+  }
+  .brand-logo{ height: 22px; }
   .brand-sub{ display: none; }
   .topbar-clock{ font-size: 11px; }
 
-  .hero-vignette{
-    background:
-      linear-gradient(to bottom, rgba(10,13,16,0.5) 0%, transparent 26%, rgba(10,13,16,0.35) 48%, rgba(10,13,16,0.98) 66%);
-  }
-
-  /* o painel de lista vira uma "folha" fixa na parte de baixo,
-     deixando a imagem principal visível acima */
   .hub-panel{
-    top: auto;
-    left: 0; right: 0; bottom: 0;
+    position: relative;
+    top: auto; right: auto; bottom: auto;
     width: 100%;
-    max-height: 64%;
-    padding: 18px 20px calc(18px + env(safe-area-inset-bottom));
-    background: linear-gradient(to top, rgba(10,13,16,0.98) 55%, rgba(10,13,16,0.85));
-    border-top: 1px solid var(--panel-line);
-    border-radius: 18px 18px 0 0;
+    height: calc(100% - 68px); /* preenche o resto da tela abaixo do topbar */
+    padding: 26px 22px calc(20px + env(safe-area-inset-bottom));
+    background: none;
+    border: none;
   }
 
-  .hub-panel::before{
-    content: "";
-    display: block;
-    width: 40px; height: 4px;
-    border-radius: 2px;
-    background: var(--panel-line);
-    margin: 0 auto 14px;
-  }
+  .hub-panel::before{ display: none; }
 
-  .hub-panel-header{ margin-bottom: 12px; }
-  .hub-title{ font-size: 20px; }
-  .hub-hint{ font-size: 12px; }
+  .hub-panel-header{ margin-bottom: 18px; }
+  .hub-eyebrow{ font-size: 10.5px; }
+  .hub-title{ font-size: 22px; }
+  .hub-hint{ font-size: 12.5px; }
 
   .hub-list{
-    gap: 8px;
-    /* deixa a lista rolável sem cortar o último item */
-    padding-bottom: 4px;
+    gap: 10px;
+    padding-bottom: 12px;
   }
 
   .hub-item{
-    padding: 14px 14px;
-    min-height: 48px; /* alvo de toque confortável */
+    padding: 15px 16px;
+    min-height: 56px; /* alvo de toque confortável */
+    background: linear-gradient(135deg, rgba(24,29,35,0.9), rgba(16,20,25,0.9));
+    border-color: var(--panel-line);
   }
-  .hub-item-name{ font-size: 14px; }
+  .hub-item:active{
+    border-left-color: var(--cyan);
+    background: linear-gradient(135deg, rgba(0,211,228,0.14), rgba(16,20,25,0.9));
+  }
+  .hub-item-id{
+    font-size: 10.5px;
+    color: var(--cyan);
+    background: rgba(0,211,228,0.08);
+    padding: 3px 7px;
+    border-radius: 3px;
+  }
+  .hub-item-name{ font-size: 15px; }
   .hub-item-arrow{
-    /* sem hover no touch: mostra a seta sempre, sutil */
-    opacity: 0.55;
+    opacity: 0.6;
     transform: none;
   }
 
-  .footer-note{ display: none; }
+  .footer-note{
+    position: relative;
+    padding: 0 22px 18px;
+    text-align: center;
+  }
 
-  /* tela do ambiente */
+  /* tela do ambiente (aqui sim a imagem/vídeo aparece) */
   .room-hud{ padding: max(14px, env(safe-area-inset-top)) 16px 14px; }
   .back-btn{ font-size: 11px; padding: 8px 12px; }
   .room-tag{ font-size: 10px; padding: 5px 8px; }
@@ -439,9 +460,8 @@ button{ font-family: inherit; cursor: pointer; }
 }
 
 @media (max-width: 420px){
-  .hub-title{ font-size: 18px; }
+  .hub-title{ font-size: 19px; }
   .topbar-clock{ display: none; }
-  .hub-panel{ max-height: 68%; }
 }
 
 @media (prefers-reduced-motion: reduce){
