@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XPTO — Tour Virtual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ===================== TELA 1 — PAINEL / MENU ===================== -->
+  <section id="menu-screen" class="screen active">
+
+    <header class="topbar">
+      <img class="brand-logo" src="assets/logo.png" alt="XPTO Inc.">
+      <div class="brand-sub">CENTRAL&nbsp;DE&nbsp;MONITORAMENTO&nbsp;/&nbsp;TOUR&nbsp;VIRTUAL</div>
+      <div class="topbar-clock" id="topbar-clock">00:00:00</div>
+    </header>
+
+    <p class="intro">
+      Selecione um feed abaixo para entrar no ambiente.
+    </p>
+
+    <div class="grid" id="grid">
+      <!-- os tiles são gerados via JS a partir de rooms[] em script.js -->
+    </div>
+
+    <footer class="footer-note">
+      SISTEMA XPTO — 5 CÂMERAS ONLINE — ACESSO VISITANTE
+    </footer>
+  </section>
+
+  <!-- ===================== TELA 2 — DENTRO DO AMBIENTE ===================== -->
+  <section id="room-screen" class="screen">
+
+    <video id="tour-video" class="tour-media" muted playsinline preload="auto"></video>
+    <img id="tour-fallback" class="tour-media tour-fallback" alt="">
+
+    <div class="scanline"></div>
+
+    <div class="room-hud room-hud--top">
+      <button id="back-btn" class="back-btn" aria-label="Voltar ao painel">
+        <span class="back-arrow">&larr;</span> Voltar ao painel
+      </button>
+      <div class="room-tag" id="room-tag">CAM 01 — AO VIVO</div>
+    </div>
+
+    <div class="room-hud room-hud--bottom">
+      <div class="room-title" id="room-title">Sala de Controle</div>
+      <div class="room-status" id="room-status">Conectando ao feed…</div>
+    </div>
+
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
