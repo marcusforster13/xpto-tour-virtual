@@ -61,33 +61,19 @@ button{ font-family: inherit; cursor: pointer; }
 
 #menu-screen{
   background: var(--bg);
-}
-
-.hero-media{
-  position: absolute; inset: 0;
-  z-index: 0;
-}
-.hero-bg{
-  width: 100%; height: 100%;
-  object-fit: cover;
-  object-position: center 40%;
-  display: block;
-}
-.hero-vignette{
-  position: absolute; inset: 0;
-  background:
-    linear-gradient(90deg, rgba(10,13,16,0.35) 0%, rgba(10,13,16,0.08) 42%, rgba(10,13,16,0.85) 74%, rgba(10,13,16,0.97) 100%),
-    linear-gradient(to bottom, rgba(10,13,16,0.75) 0%, transparent 18%, transparent 78%, rgba(10,13,16,0.85) 100%);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .topbar{
-  position: absolute;
-  top: 0; left: 0; right: 0;
+  position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
   gap: 16px;
   padding: 26px 40px;
+  flex-shrink: 0;
 }
 
 .brand-logo{
@@ -111,14 +97,116 @@ button{ font-family: inherit; cursor: pointer; }
   letter-spacing: 0.05em;
 }
 
-.hub-panel{
+/* ---- corpo: moldura de câmera + painel de lista, lado a lado ---- */
+
+.hub-layout{
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  gap: 40px;
+  padding: 24px 40px;
+}
+
+.camera-frame{
+  position: relative;
+  align-self: center;
+  width: min(58%, 780px);
+  aspect-ratio: 1383 / 818;
+  border: 1px solid var(--panel-line);
+  border-radius: 4px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+}
+
+.camera-frame-img{
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.camera-frame-shade{
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(10,13,16,0.85) 0%, transparent 30%, transparent 78%, rgba(10,13,16,0.55) 100%);
+}
+
+.camera-frame-hud{
   position: absolute;
-  top: 0; right: 0; bottom: 0;
+  top: 14px; left: 14px; right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
   z-index: 2;
-  width: min(440px, 44vw);
+}
+.camera-frame-id{
+  background: rgba(0,0,0,0.55);
+  padding: 4px 8px;
+  border-radius: 2px;
+  color: var(--text);
+}
+.camera-frame-rec{
+  display: flex; align-items: center; gap: 6px;
+  color: var(--red);
+  background: rgba(0,0,0,0.55);
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+.camera-frame-rec .dot{
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--red);
+  display: inline-block;
+  animation: blink 1.4s infinite ease-in-out;
+}
+@keyframes blink{ 50% { opacity: 0.25; } }
+
+.camera-frame-caption{
+  position: absolute;
+  left: 18px; right: 18px; bottom: 16px;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  padding: 100px 32px 24px;
+  gap: 4px;
+}
+.camera-frame-title{
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  color: var(--text);
+}
+.camera-frame-desc{
+  font-family: var(--font-body);
+  font-size: 12.5px;
+  color: var(--text-muted);
+  max-width: 85%;
+}
+
+/* cantos de mira, tipo viewfinder de câmera */
+.corner{
+  position: absolute;
+  width: 22px; height: 22px;
+  border-color: var(--cyan);
+  opacity: 0.85;
+  z-index: 2;
+}
+.corner-tl{ top: 10px; left: 10px; border-top: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+.corner-tr{ top: 10px; right: 10px; border-top: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
+.corner-bl{ bottom: 10px; left: 10px; border-bottom: 2px solid var(--cyan); border-left: 2px solid var(--cyan); }
+.corner-br{ bottom: 10px; right: 10px; border-bottom: 2px solid var(--cyan); border-right: 2px solid var(--cyan); }
+
+.hub-panel{
+  position: relative;
+  z-index: 2;
+  width: min(380px, 34vw);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
 }
 
 .hub-panel-header{ margin-bottom: 22px; }
@@ -197,46 +285,9 @@ button{ font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   gap: 8px;
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-}
-
-/* card em destaque (primeiro ambiente da lista) */
-.hub-item--featured{
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  gap: 4px;
-  min-height: 148px;
-  padding: 18px;
-  background-size: cover;
-  background-position: center;
-  border-left: none;
-  border: 1px solid var(--panel-line);
-  margin-bottom: 6px;
-}
-.hub-item--featured:hover,
-.hub-item--featured:focus-visible{
-  border-color: var(--cyan-dim);
-  transform: none;
-  outline: 2px solid var(--cyan);
-  outline-offset: -2px;
-}
-.hub-item--featured .hub-item-id{
-  color: var(--cyan);
-  background: rgba(0,211,228,0.12);
-  padding: 3px 8px;
-  border-radius: 3px;
-  margin-bottom: 4px;
-}
-.hub-item--featured .hub-item-name{
-  font-size: 20px;
-}
-.hub-item-desc{
-  font-family: var(--font-body);
-  font-size: 12.5px;
-  color: var(--text-muted);
-  line-height: 1.4;
-  max-width: 90%;
 }
 
 .hub-item{
@@ -261,10 +312,6 @@ button{ font-family: inherit; cursor: pointer; }
   border-left-color: var(--cyan);
   background: rgba(18,22,27,0.85);
   transform: translateX(-2px);
-}
-.hub-item:focus-visible{
-  outline: 2px solid var(--cyan);
-  outline-offset: -2px; /* fica por dentro do card, sem vazar pra fora */
 }
 
 .hub-item-id{
@@ -297,9 +344,7 @@ button{ font-family: inherit; cursor: pointer; }
 }
 
 .footer-note{
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  z-index: 2;
+  flex-shrink: 0;
   padding: 16px 40px;
   font-family: var(--font-mono);
   font-size: 10px;
@@ -455,9 +500,13 @@ button{ font-family: inherit; cursor: pointer; }
 
 @media (max-width: 900px){
 
-  .hero-media,
-  .hero-vignette{
-    display: none;
+  .camera-frame{
+    display: none; /* no celular, sem moldura de câmera — só o menu */
+  }
+
+  .hub-layout{
+    padding: 0;
+    display: block; /* volta ao fluxo normal de bloco no mobile */
   }
 
   #menu-screen{
@@ -482,8 +531,8 @@ button{ font-family: inherit; cursor: pointer; }
 
   .hub-panel{
     position: relative;
-    top: auto; right: auto; bottom: auto;
     width: 100%;
+    max-height: none;
     height: calc(100% - 68px); /* preenche o resto da tela abaixo do topbar */
     padding: 26px 22px calc(20px + env(safe-area-inset-bottom));
     background: none;
@@ -517,12 +566,6 @@ button{ font-family: inherit; cursor: pointer; }
     gap: 10px;
     padding-bottom: 12px;
   }
-
-  .hub-item--featured{
-    min-height: 120px;
-    padding: 16px;
-  }
-  .hub-item--featured .hub-item-name{ font-size: 18px; }
 
   .hub-item{
     padding: 15px 16px;
