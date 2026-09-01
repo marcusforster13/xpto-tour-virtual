@@ -113,7 +113,7 @@ button{ font-family: inherit; cursor: pointer; }
   position: relative;
   align-self: center;
   width: min(58%, 780px);
-  aspect-ratio: 1383 / 818;
+  aspect-ratio: 16 / 9;
   border: 1px solid var(--panel-line);
   border-radius: 4px;
   overflow: hidden;
