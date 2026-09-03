@@ -208,12 +208,14 @@ function showControlPanelFor(roomId) {
   renderControlButtons();
   updateControlFrame();
   controlPanel.classList.add("active");
+  menuScreen.classList.add("control-active");
 }
 
 function hideControlPanel() {
   isControlPanelActive = false;
   activeControlRoomId = null;
   controlPanel.classList.remove("active");
+  menuScreen.classList.remove("control-active");
   cameraFrameImg.src = HERO_IMAGE;
   cameraFrameId.textContent = "CAM 01";
   cameraFrameTitle.textContent = "Fachada — XPTO Inc.";

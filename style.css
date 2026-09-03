@@ -682,6 +682,77 @@ button{ font-family: inherit; cursor: pointer; }
   }
   .room-title{ font-size: 18px; }
   .room-desc{ font-size: 13px; }
+
+  /* ===== painel de controle de sala, no celular =====
+     quando uma sala com painel está ativa (classe .control-active no
+     menu-screen), a moldura de câmera some do jeito padrão do menu e
+     vira uma tela própria: imagem ocupando o espaço todo, com os
+     botões de controle numa barra fixa embaixo, fácil de tocar. */
+  #menu-screen.control-active .hub-panel{
+    display: none;
+  }
+  #menu-screen.control-active .topbar{
+    position: relative;
+    z-index: 5;
+  }
+  #menu-screen.control-active .camera-frame{
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: auto;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  #menu-screen.control-active .camera-frame-img{
+    object-fit: cover;
+  }
+  #menu-screen.control-active .corner{
+    display: none;
+  }
+  #menu-screen.control-active .camera-frame-hud{
+    top: max(70px, calc(env(safe-area-inset-top) + 60px));
+  }
+  #menu-screen.control-active .camera-frame-caption{
+    bottom: calc(150px + env(safe-area-inset-bottom));
+    left: 16px; right: 16px;
+  }
+  #menu-screen.control-active .camera-frame-title{
+    font-size: 17px;
+  }
+
+  #menu-screen.control-active .control-panel{
+    top: auto;
+    right: 0; left: 0; bottom: 0;
+    align-items: stretch;
+    gap: 0;
+    padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+    background: linear-gradient(to top, rgba(10,13,16,0.97) 60%, rgba(10,13,16,0.7));
+  }
+  #menu-screen.control-active .control-back{
+    align-self: flex-start;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+  #menu-screen.control-active .control-buttons{
+    flex-direction: row;
+    flex-wrap: wrap;
+    background: none;
+    border: none;
+    padding: 0;
+    gap: 8px;
+  }
+  #menu-screen.control-active .control-btn{
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 13px 12px;
+    font-size: 12px;
+    min-height: 46px;
+  }
 }
 
 @media (max-width: 420px){
