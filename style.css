@@ -685,39 +685,48 @@ button{ font-family: inherit; cursor: pointer; }
 
   /* ===== painel de controle de sala, no celular =====
      quando uma sala com painel está ativa (classe .control-active no
-     menu-screen), a moldura de câmera some do jeito padrão do menu e
-     vira uma tela própria: imagem ocupando o espaço todo, com os
-     botões de controle numa barra fixa embaixo, fácil de tocar. */
+     menu-screen), a lista some e o espaço que ela ocupava vira a
+     imagem da sala (inteira, sem cortar — por isso object-fit:contain),
+     com os botões de controle numa barra fixa embaixo dela. */
   #menu-screen.control-active .hub-panel{
     display: none;
   }
-  #menu-screen.control-active .topbar{
+  #menu-screen.control-active .hub-layout{
     position: relative;
-    z-index: 5;
-  }
-  #menu-screen.control-active .camera-frame{
     display: block;
-    position: fixed;
+    padding: 0;
+  }
+  #menu-screen.control-active .footer-note{
+    display: none;
+  }
+
+  #menu-screen.control-active .camera-frame{
+    display: flex;
+    position: absolute;
     inset: 0;
-    z-index: 3;
-    width: 100%;
-    height: 100%;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
     aspect-ratio: auto;
+    background: #000;
     border: none;
     border-radius: 0;
     box-shadow: none;
   }
   #menu-screen.control-active .camera-frame-img{
-    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* mostra a imagem inteira, sem cortar nada */
+  }
+  #menu-screen.control-active .camera-frame-shade{
+    display: none; /* a vinheta escura não faz sentido com letterbox preto */
   }
   #menu-screen.control-active .corner{
     display: none;
   }
-  #menu-screen.control-active .camera-frame-hud{
-    top: max(70px, calc(env(safe-area-inset-top) + 60px));
-  }
   #menu-screen.control-active .camera-frame-caption{
-    bottom: calc(150px + env(safe-area-inset-bottom));
+    bottom: calc(128px + env(safe-area-inset-bottom));
     left: 16px; right: 16px;
   }
   #menu-screen.control-active .camera-frame-title{
