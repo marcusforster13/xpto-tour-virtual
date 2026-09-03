@@ -55,6 +55,19 @@ const ROOM_CONTROLS = {
       "11": "assets/veritas/estado-11.jpg",
     },
   },
+  "reuniao-tikvah": {
+    devices: ["sala", "tv"],
+    camLabel: "CAM 03",
+    title: "Sala de Reunião 2 — Tikvah",
+    desc: "Ambiente para reuniões internas, treinamentos e alinhamentos de equipe.",
+    images: {
+      // mesmas imagens da Veritas, reaproveitadas por enquanto
+      "00": "assets/veritas/estado-00.jpg",
+      "01": "assets/veritas/estado-01.jpg",
+      "10": "assets/veritas/estado-10.jpg",
+      "11": "assets/veritas/estado-11.jpg",
+    },
+  },
   descanso: {
     devices: ["sala", "tv"],
     camLabel: "CAM 05",
