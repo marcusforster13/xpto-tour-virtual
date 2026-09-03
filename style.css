@@ -685,25 +685,30 @@ button{ font-family: inherit; cursor: pointer; }
 
   /* ===== painel de controle de sala, no celular =====
      quando uma sala com painel está ativa (classe .control-active no
-     menu-screen), a lista some e a imagem da sala ocupa a tela toda
-     (sem cortar nada — por isso object-fit:contain), com os botões
-     de controle numa barra fixa embaixo dela. */
+     menu-screen), a lista some e a imagem da sala ocupa o espaço
+     restante da tela (sem cortar nada — object-fit:contain), com os
+     botões de controle numa barra embaixo dela. A moldura em si vira
+     uma caixa dimensionada por flexbox normal (hub-layout), e a
+     imagem/painel ficam absolutos dentro dela — igual já funcionava
+     no desktop, só que agora a caixa tem o tamanho da tela do celular. */
   #menu-screen.control-active .hub-panel{
     display: none;
   }
   #menu-screen.control-active .footer-note{
     display: none;
   }
+  #menu-screen.control-active .hub-layout{
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
 
   #menu-screen.control-active .camera-frame{
-    display: flex;
-    position: fixed;
-    inset: 0;
-    z-index: 4;
-    align-items: center;
-    justify-content: center;
+    display: block;
+    position: relative;
+    flex: 1;
+    min-height: 0;
     width: 100%;
-    height: 100%;
     aspect-ratio: auto;
     background: #000;
     border: none;
@@ -711,6 +716,8 @@ button{ font-family: inherit; cursor: pointer; }
     box-shadow: none;
   }
   #menu-screen.control-active .camera-frame-img{
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: contain; /* mostra a imagem inteira, sem cortar nada */
@@ -722,10 +729,10 @@ button{ font-family: inherit; cursor: pointer; }
     display: none;
   }
   #menu-screen.control-active .camera-frame-hud{
-    top: max(16px, env(safe-area-inset-top));
+    top: 14px;
   }
   #menu-screen.control-active .camera-frame-caption{
-    bottom: calc(128px + env(safe-area-inset-bottom));
+    bottom: 96px;
     left: 16px; right: 16px;
   }
   #menu-screen.control-active .camera-frame-title{
@@ -738,7 +745,7 @@ button{ font-family: inherit; cursor: pointer; }
     align-items: stretch;
     gap: 0;
     padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
-    background: linear-gradient(to top, rgba(10,13,16,0.97) 60%, rgba(10,13,16,0.7));
+    background: linear-gradient(to top, rgba(10,13,16,0.97) 60%, rgba(10,13,16,0.75));
   }
   #menu-screen.control-active .control-back{
     align-self: flex-start;
