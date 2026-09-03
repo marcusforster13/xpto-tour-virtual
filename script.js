@@ -21,18 +21,40 @@
 
 const HERO_IMAGE = "assets/sala-controle.png";
 
-// ---------- painel de controle da Sala de Controle ----------
-// cada combinação de sala/tv/totem liga/desliga tem uma imagem própria.
-// chave = `${sala}${tv}${totem}`, 1 = ligado, 0 = desligado.
-const CONTROL_IMAGES = {
-  "000": "assets/controle/estado-000.jpg",
-  "001": "assets/controle/estado-001.jpg",
-  "010": "assets/controle/estado-010.jpg",
-  "011": "assets/controle/estado-011.jpg",
-  "100": "assets/controle/estado-100.jpg",
-  "101": "assets/controle/estado-101.jpg",
-  "110": "assets/controle/estado-110.jpg",
-  "111": "assets/controle/estado-111.jpg",
+// ---------- painel de controle (funciona pra qualquer sala) ----------
+// cada sala tem sua própria lista de dispositivos e seu próprio mapa de
+// imagens — a chave é a combinação de estados na ordem de "devices",
+// 1 = ligado, 0 = desligado. Ex: Sala de Controle tem 3 dispositivos
+// (sala, tv, totem) = 8 combinações; a Veritas só tem 2 (sala, tv) = 4.
+const ROOM_CONTROLS = {
+  controle: {
+    devices: ["sala", "tv", "totem"],
+    camLabel: "CAM 01",
+    title: "Sala de Controle",
+    desc: "Onde os operadores acompanham câmeras, alertas e sistemas em tempo real, 24 horas por dia.",
+    images: {
+      "000": "assets/controle/estado-000.jpg",
+      "001": "assets/controle/estado-001.jpg",
+      "010": "assets/controle/estado-010.jpg",
+      "011": "assets/controle/estado-011.jpg",
+      "100": "assets/controle/estado-100.jpg",
+      "101": "assets/controle/estado-101.jpg",
+      "110": "assets/controle/estado-110.jpg",
+      "111": "assets/controle/estado-111.jpg",
+    },
+  },
+  "reuniao-veritas": {
+    devices: ["sala", "tv"],
+    camLabel: "CAM 02",
+    title: "Sala de Reunião 1 — Veritas",
+    desc: "Espaço reservado para reuniões estratégicas, alinhamentos e apresentações a clientes.",
+    images: {
+      "00": "assets/veritas/estado-00.jpg",
+      "01": "assets/veritas/estado-01.jpg",
+      "10": "assets/veritas/estado-10.jpg",
+      "11": "assets/veritas/estado-11.jpg",
+    },
+  },
 };
 
 const DEVICE_LABELS = {
@@ -41,9 +63,8 @@ const DEVICE_LABELS = {
   totem: "Totem",
 };
 
-// começa tudo ligado, já que é assim que a Sala de Controle deve
-// aparecer na primeira vez que a pessoa clica nela.
-var controlState = { sala: true, tv: true, totem: true };
+var controlStates = {};       // guarda o estado de cada sala separadamente
+var activeControlRoomId = null;
 var isControlPanelActive = false;
 
 const ROOMS = [
@@ -119,40 +140,59 @@ camCountEl.textContent = ROOMS.length;
 const statCountEl = document.getElementById("stat-count");
 if (statCountEl) statCountEl.textContent = String(ROOMS.length).padStart(2, "0");
 
-// ---------- painel de controle da Sala de Controle ----------
+// ---------- painel de controle ----------
+function activeConfig() {
+  return ROOM_CONTROLS[activeControlRoomId];
+}
+
 function controlKey() {
-  return (controlState.sala ? "1" : "0") + (controlState.tv ? "1" : "0") + (controlState.totem ? "1" : "0");
+  var cfg = activeConfig();
+  var state = controlStates[activeControlRoomId];
+  return cfg.devices.map(function (d) { return state[d] ? "1" : "0"; }).join("");
 }
 
 function renderControlButtons() {
-  ["sala", "tv", "totem"].forEach(function (device) {
-    var btn = document.getElementById("btn-" + device);
-    var on = controlState[device];
-    btn.classList.toggle("is-on", on);
-    btn.textContent = (on ? "Desligar " : "Ligar ") + DEVICE_LABELS[device];
+  var cfg = activeConfig();
+  var state = controlStates[activeControlRoomId];
+  var container = document.getElementById("control-buttons");
+  container.innerHTML = "";
+
+  cfg.devices.forEach(function (device) {
+    var btn = document.createElement("button");
+    btn.className = "control-btn" + (state[device] ? " is-on" : "");
+    btn.textContent = (state[device] ? "Desligar " : "Ligar ") + DEVICE_LABELS[device];
+    btn.addEventListener("click", function () {
+      // "lógica certeira": só inverte o estado desse dispositivo — a
+      // imagem certa é escolhida automaticamente pela combinação
+      // resultante, então nunca fica com a imagem errada.
+      state[device] = !state[device];
+      renderControlButtons();
+      updateControlFrame();
+    });
+    container.appendChild(btn);
   });
 }
 
 function updateControlFrame() {
-  cameraFrameImg.src = CONTROL_IMAGES[controlKey()];
+  var cfg = activeConfig();
+  cameraFrameImg.src = cfg.images[controlKey()];
 }
 
-function toggleDevice(device) {
-  // aqui está a "lógica certeira": só inverte o estado daquele
-  // dispositivo específico, e a imagem certa é escolhida automaticamente
-  // pela combinação resultante — nunca dá pra ficar com a imagem errada,
-  // porque as 8 combinações possíveis já estão todas mapeadas.
-  controlState[device] = !controlState[device];
-  renderControlButtons();
-  updateControlFrame();
-}
+function showControlPanelFor(roomId) {
+  var cfg = ROOM_CONTROLS[roomId];
+  if (!cfg) return;
 
-function showControlPanel() {
   isControlPanelActive = true;
-  controlState = { sala: true, tv: true, totem: true }; // "toda ligada" ao entrar
-  cameraFrameId.textContent = "CAM 01";
-  cameraFrameTitle.textContent = "Sala de Controle";
-  cameraFrameDesc.textContent = "Onde os operadores acompanham câmeras, alertas e sistemas em tempo real, 24 horas por dia.";
+  activeControlRoomId = roomId;
+
+  // sempre reabre "tudo ligado", como pedido
+  var state = {};
+  cfg.devices.forEach(function (d) { state[d] = true; });
+  controlStates[roomId] = state;
+
+  cameraFrameId.textContent = cfg.camLabel;
+  cameraFrameTitle.textContent = cfg.title;
+  cameraFrameDesc.textContent = cfg.desc;
   renderControlButtons();
   updateControlFrame();
   controlPanel.classList.add("active");
@@ -160,6 +200,7 @@ function showControlPanel() {
 
 function hideControlPanel() {
   isControlPanelActive = false;
+  activeControlRoomId = null;
   controlPanel.classList.remove("active");
   cameraFrameImg.src = HERO_IMAGE;
   cameraFrameId.textContent = "CAM 01";
@@ -168,11 +209,6 @@ function hideControlPanel() {
 }
 
 controlBack.addEventListener("click", hideControlPanel);
-["sala", "tv", "totem"].forEach(function (device) {
-  document.getElementById("btn-" + device).addEventListener("click", function () {
-    toggleDevice(device);
-  });
-});
 
 // ---------- monta a lista do hub (uniforme — a pré-visualização
 // grande já fica no quadro de câmera ao lado) ----------
@@ -186,11 +222,11 @@ ROOMS.forEach((room) => {
     <span class="hub-item-name">${room.title}</span>
     <span class="hub-item-arrow">&rarr;</span>
   `;
-  // a Sala de Controle é especial: em vez de "entrar" no ambiente
-  // (vídeo), ela mostra o painel de controle na própria moldura de
-  // câmera da tela principal.
-  if (room.id === "controle") {
-    btn.addEventListener("click", showControlPanel);
+  // salas com painel de controle (definidas em ROOM_CONTROLS) mostram
+  // o painel na própria moldura da tela principal; as demais continuam
+  // "entrando" no ambiente via vídeo.
+  if (ROOM_CONTROLS[room.id]) {
+    btn.addEventListener("click", () => showControlPanelFor(room.id));
   } else {
     btn.addEventListener("click", () => enterRoom(room));
   }
