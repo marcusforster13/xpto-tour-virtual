@@ -186,6 +186,79 @@ button{ font-family: inherit; cursor: pointer; }
   max-width: 85%;
 }
 
+/* painel de controle (aparece só na Sala de Controle) */
+.control-panel{
+  position: absolute;
+  top: 14px; right: 14px;
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.control-panel.active{ display: flex; }
+
+.control-back{
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  background: rgba(0,0,0,0.55);
+  border: 1px solid var(--panel-line);
+  padding: 5px 9px;
+  border-radius: 3px;
+  transition: color .2s ease, border-color .2s ease;
+}
+.control-back:hover{
+  color: var(--text);
+  border-color: var(--cyan-dim);
+}
+
+.control-buttons{
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(10,13,16,0.7);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--panel-line);
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.control-btn{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 7px 10px;
+  border-radius: 4px;
+  border: 1px solid var(--panel-line);
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
+  white-space: nowrap;
+  transition: border-color .2s ease, background .2s ease;
+}
+.control-btn::before{
+  content: "";
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+  transition: background .2s ease, box-shadow .2s ease;
+}
+.control-btn.is-on::before{
+  background: var(--cyan);
+  box-shadow: 0 0 6px var(--cyan);
+}
+.control-btn.is-on{
+  border-color: var(--cyan-dim);
+}
+.control-btn:hover{
+  background: rgba(255,255,255,0.07);
+}
+
 /* cantos de mira, tipo viewfinder de câmera */
 .corner{
   position: absolute;

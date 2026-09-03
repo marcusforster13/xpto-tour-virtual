@@ -21,6 +21,31 @@
 
 const HERO_IMAGE = "assets/sala-controle.png";
 
+// ---------- painel de controle da Sala de Controle ----------
+// cada combinação de sala/tv/totem liga/desliga tem uma imagem própria.
+// chave = `${sala}${tv}${totem}`, 1 = ligado, 0 = desligado.
+const CONTROL_IMAGES = {
+  "000": "assets/controle/estado-000.jpg",
+  "001": "assets/controle/estado-001.jpg",
+  "010": "assets/controle/estado-010.jpg",
+  "011": "assets/controle/estado-011.jpg",
+  "100": "assets/controle/estado-100.jpg",
+  "101": "assets/controle/estado-101.jpg",
+  "110": "assets/controle/estado-110.jpg",
+  "111": "assets/controle/estado-111.jpg",
+};
+
+const DEVICE_LABELS = {
+  sala: "Sala",
+  tv: "TV",
+  totem: "Totem",
+};
+
+// começa tudo ligado, já que é assim que a Sala de Controle deve
+// aparecer na primeira vez que a pessoa clica nela.
+var controlState = { sala: true, tv: true, totem: true };
+var isControlPanelActive = false;
+
 const ROOMS = [
   {
     id: "controle",
@@ -81,11 +106,73 @@ const roomStatusEl   = document.getElementById("room-status");
 const backBtn        = document.getElementById("back-btn");
 const topbarClock    = document.getElementById("topbar-clock");
 
+const cameraFrameImg   = document.getElementById("camera-frame-img");
+const cameraFrameId    = document.getElementById("camera-frame-id");
+const cameraFrameTitle = document.getElementById("camera-frame-title");
+const cameraFrameDesc  = document.getElementById("camera-frame-desc");
+const controlPanel     = document.getElementById("control-panel");
+const controlBack      = document.getElementById("control-back");
+
 videoEl.setAttribute("poster", HERO_IMAGE);
 camCountEl.textContent = ROOMS.length;
 
 const statCountEl = document.getElementById("stat-count");
 if (statCountEl) statCountEl.textContent = String(ROOMS.length).padStart(2, "0");
+
+// ---------- painel de controle da Sala de Controle ----------
+function controlKey() {
+  return (controlState.sala ? "1" : "0") + (controlState.tv ? "1" : "0") + (controlState.totem ? "1" : "0");
+}
+
+function renderControlButtons() {
+  ["sala", "tv", "totem"].forEach(function (device) {
+    var btn = document.getElementById("btn-" + device);
+    var on = controlState[device];
+    btn.classList.toggle("is-on", on);
+    btn.textContent = (on ? "Desligar " : "Ligar ") + DEVICE_LABELS[device];
+  });
+}
+
+function updateControlFrame() {
+  cameraFrameImg.src = CONTROL_IMAGES[controlKey()];
+}
+
+function toggleDevice(device) {
+  // aqui está a "lógica certeira": só inverte o estado daquele
+  // dispositivo específico, e a imagem certa é escolhida automaticamente
+  // pela combinação resultante — nunca dá pra ficar com a imagem errada,
+  // porque as 8 combinações possíveis já estão todas mapeadas.
+  controlState[device] = !controlState[device];
+  renderControlButtons();
+  updateControlFrame();
+}
+
+function showControlPanel() {
+  isControlPanelActive = true;
+  controlState = { sala: true, tv: true, totem: true }; // "toda ligada" ao entrar
+  cameraFrameId.textContent = "CAM 01";
+  cameraFrameTitle.textContent = "Sala de Controle";
+  cameraFrameDesc.textContent = "Onde os operadores acompanham câmeras, alertas e sistemas em tempo real, 24 horas por dia.";
+  renderControlButtons();
+  updateControlFrame();
+  controlPanel.classList.add("active");
+}
+
+function hideControlPanel() {
+  isControlPanelActive = false;
+  controlPanel.classList.remove("active");
+  cameraFrameImg.src = HERO_IMAGE;
+  cameraFrameId.textContent = "CAM 01";
+  cameraFrameTitle.textContent = "Fachada — XPTO Inc.";
+  cameraFrameDesc.textContent = "Vista externa do prédio da XPTO, Rio de Janeiro.";
+}
+
+controlBack.addEventListener("click", hideControlPanel);
+["sala", "tv", "totem"].forEach(function (device) {
+  document.getElementById("btn-" + device).addEventListener("click", function () {
+    toggleDevice(device);
+  });
+});
 
 // ---------- monta a lista do hub (uniforme — a pré-visualização
 // grande já fica no quadro de câmera ao lado) ----------
@@ -99,7 +186,14 @@ ROOMS.forEach((room) => {
     <span class="hub-item-name">${room.title}</span>
     <span class="hub-item-arrow">&rarr;</span>
   `;
-  btn.addEventListener("click", () => enterRoom(room));
+  // a Sala de Controle é especial: em vez de "entrar" no ambiente
+  // (vídeo), ela mostra o painel de controle na própria moldura de
+  // câmera da tela principal.
+  if (room.id === "controle") {
+    btn.addEventListener("click", showControlPanel);
+  } else {
+    btn.addEventListener("click", () => enterRoom(room));
+  }
   li.appendChild(btn);
   hubList.appendChild(li);
 });
