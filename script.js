@@ -55,6 +55,18 @@ const ROOM_CONTROLS = {
       "11": "assets/veritas/estado-11.jpg",
     },
   },
+  descanso: {
+    devices: ["sala", "tv"],
+    camLabel: "CAM 05",
+    title: "Sala de Descanso",
+    desc: "Espaço de convivência da equipe para pausas durante o turno.",
+    images: {
+      "00": "assets/descanso/estado-00.jpg",
+      "01": "assets/descanso/estado-01.jpg",
+      "10": "assets/descanso/estado-10.jpg",
+      "11": "assets/descanso/estado-11.jpg",
+    },
+  },
 };
 
 const DEVICE_LABELS = {
